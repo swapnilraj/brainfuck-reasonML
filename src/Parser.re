@@ -32,3 +32,16 @@ let rec parse = (p: list(string)) =>
 and loopBody = (p: list(string))  => p |> parse
 and loopEnd = (p: list(string))   => p |> instructions_after_loop |> parse;
 
+let rec show = (tree : list(token)) =>
+	switch tree {
+    | [NEXT_CELL, ...xs]      => "NEXT_CELL " ++ show(xs)
+    | [PREVIOUS_CELL, ...xs]  => "PREVIOUS_CELL " ++ show(xs)
+    | [INCREMENT, ...xs]      => "INCREMENT " ++ show(xs)
+    | [DECREMENT, ...xs]      => "DECREMENT " ++ show(xs)
+    | [SLOOP(b, e), ..._xs]   => "SLOOP [ " ++ show(b) ++ "] " ++ show(e)
+    | [ELOOP, ..._xs]         => "ELOOP "
+    | [END, ..._xs]           => "END"
+    | []                      => "END"
+	};
+
+Js.log(show((parse([">", "-", "[", "+", "[","+","[",">","]" ,"]","]", "-", ">"]))))
