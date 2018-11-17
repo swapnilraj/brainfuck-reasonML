@@ -16,23 +16,24 @@ let rec instructions_after_loop' = (p: list(string), d: int): list(string) =>
   | ([_x, ...xs], d)  => instructions_after_loop'(xs, d)
   };
 
-let instructions_after_loop = (p: list(string)) =>
+let instructions_after_loop = (p: list(string)): list(string) =>
   instructions_after_loop'(p, 0);
 
-let rec parse = (p: list(string)) =>
+let rec parse = (p: list(string)): list(token) =>
   switch p {
-  | [] => [END]
   | ["+", ...xs]  => [INCREMENT, ...parse(xs)]
   | ["-", ...xs]  => [DECREMENT, ...parse(xs)]
   | [">", ...xs]  => [NEXT_CELL, ...parse(xs)]
   | ["<", ...xs]  => [PREVIOUS_CELL, ...parse(xs)]
   | ["[", ...xs]  => [SLOOP(loopBody(xs), loopEnd(xs))]
   | ["]", ..._xs] => [ELOOP]
+  | [_x, ...xs]   => xs |> parse
+  | []            => [END]
   }
 and loopBody = (p: list(string))  => p |> parse
 and loopEnd = (p: list(string))   => p |> instructions_after_loop |> parse;
 
-let rec show = (tree : list(token)) =>
+let rec show = (tree : list(token)): string =>
 	switch tree {
     | [NEXT_CELL, ...xs]      => "NEXT_CELL " ++ show(xs)
     | [PREVIOUS_CELL, ...xs]  => "PREVIOUS_CELL " ++ show(xs)
