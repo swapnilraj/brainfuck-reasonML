@@ -42,9 +42,14 @@ module Tape = {
     | Tape(ls, m, rs) => Tape(ls, pred(m) , rs)
     };
 
-  let print_cell = (t: tape('a)): unit =>
+  let print_value = (t: tape('a), c: 'a) => {
+    Js.log(c);
+    t;
+  };
+
+  let print_cell = (t: tape('a)): tape('a) =>
     switch t {
-    | Tape(_ls, m, _rs) => Js.log(m);
+    | Tape(ls, m, rs) => print_value(Tape(ls, m, rs), m)
     };
 
   let write_value = (t: tape('a), c:'a) =>
@@ -52,8 +57,4 @@ module Tape = {
     | Tape(ls, _m, rs) => Tape(ls, c, rs)
     };
 
-  let print_value = (t: tape('a)) =>
-    switch t {
-    | Tape(_ls, m, _rs) => Js.log(m)
-    };
 };
