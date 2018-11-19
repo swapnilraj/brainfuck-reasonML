@@ -16,9 +16,8 @@ module Parser = {
     | (["[", ...xs], d) => instructions_after_loop'(xs, succ(d))
     | (["]", ...xs], d) => instructions_after_loop'(xs, pred(d))
     | ([_x, ...xs], d)  => instructions_after_loop'(xs, d)
-    };
-
-  let instructions_after_loop = (p: list(string)): list(string) =>
+    }
+  and instructions_after_loop = (p: list(string)): list(string) =>
     instructions_after_loop'(p, 0);
 
   let rec parse = (p: list(string)): list(token) =>
