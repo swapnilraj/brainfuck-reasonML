@@ -32,14 +32,14 @@ module Tape = {
     | Tape(ls, m, rs) => Tape(init(ls), last(ls), [m, ...rs])
     };
 
-  let increment = (t: tape('a)): tape('a) =>
+  let increment = (t: tape('a), succ: ('a => 'a)): tape('a) =>
     switch t {
-    | Tape(ls, m, rs) => Tape(ls, m + 1, rs)
+    | Tape(ls, m, rs) => Tape(ls, succ(m) , rs)
     };
 
-  let decrement = (t: tape('a)): tape('a) =>
+  let decrement = (t: tape('a), pred: ('a => 'a)): tape('a) =>
     switch t {
-    | Tape(ls, m, rs) => Tape(ls, m - 1, rs)
+    | Tape(ls, m, rs) => Tape(ls, pred(m) , rs)
     };
 
   let print_cell = (t: tape('a)): unit =>
