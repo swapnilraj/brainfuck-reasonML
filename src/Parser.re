@@ -5,6 +5,8 @@ module Parser = {
     | PREVIOUS_CELL
     | INCREMENT
     | DECREMENT
+    | PUT
+    | GET
     | SLOOP(list(token), list(token))
     | ELOOP
     | END;
@@ -26,6 +28,8 @@ module Parser = {
     | ["-", ...xs]  => [DECREMENT, ...parse(xs)]
     | [">", ...xs]  => [NEXT_CELL, ...parse(xs)]
     | ["<", ...xs]  => [PREVIOUS_CELL, ...parse(xs)]
+    | [".", ...xs]  => [PUT, ...parse(xs)]
+    | [",", ...xs]  => [GET, ...parse(xs)]
     | ["[", ...xs]  => [SLOOP(loopBody(xs), loopEnd(xs))]
     | ["]", ..._xs] => [ELOOP]
     | [_x, ...xs]   => xs |> parse
@@ -40,6 +44,8 @@ module Parser = {
     | [PREVIOUS_CELL, ...xs]  => "PREVIOUS_CELL " ++ show(xs)
     | [INCREMENT, ...xs]      => "INCREMENT " ++ show(xs)
     | [DECREMENT, ...xs]      => "DECREMENT " ++ show(xs)
+    | [PUT, ...xs]            => "PUT" ++ show(xs)
+    | [GET, ...xs]            => "GET" ++ show(xs)
     | [SLOOP(b, e), ..._xs]   => "SLOOP [ " ++ show(b) ++ "] " ++ show(e)
     | [ELOOP, ..._xs]         => "ELOOP "
     | [END, ..._xs]           => "END"
