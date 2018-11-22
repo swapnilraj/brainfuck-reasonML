@@ -12,7 +12,7 @@ module Interpreter = {
     (),
   );
 
-  let tape = ref(Tape.Tape([], Char.chr(0), [char_of_int(0), char_of_int(0)]));
+  let tape = ref(Tape.Tape([], Char.chr(12), [char_of_int(0), char_of_int(0)]));
 
   let readline = Readline.createInterface(options);
 
@@ -36,15 +36,25 @@ module Interpreter = {
         interpret(ts);
     }
     | [Parser.PUT, ...ts]            => {
+        Js.log("PUT");
         tape := Tape.print_cell(tape^);
         interpret(ts);
     }
     | [Parser.GET, ...ts]            => {
+      Js.log("GET");
       func_on_input(Tape.write_value(tape^), ts)
     }
-    | [Parser.SLOOP(b, e), ...ts]    => {
+    | [Parser.SLOOP(b, e), ..._ts]    => {
         Js.log("SLOOP");
+        switch tape^ {
+        | Tape(_ls, m, _rs) => {
+            while(int_of_char(m) != 0)
+              interpret(b)
+            interpret(e);
+          };
+        };
       };
+    | [Parser.ELOOP, ..._ts]        => ();
     | [Parser.END, ..._ts]          => Readline.close(readline)
     | t => t |. interpret
     }
@@ -57,6 +67,6 @@ module Interpreter = {
 
   /*Testing code*/
   interpret(
-    [Parser.GET, Parser.INCREMENT, Parser.INCREMENT, Parser.INCREMENT, 
-    Parser.PUT, Parser.NEXT_CELL, Parser.GET, Parser.PUT, Parser.END])
+    Parser.parse(["[", "-", ".", "]"])
+  );
 };
