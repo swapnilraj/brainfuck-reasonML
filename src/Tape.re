@@ -42,14 +42,9 @@ module Tape = {
     | Tape(ls, m, rs) => Tape(ls, pred(m) , rs)
     };
 
-  let print_value = (t: tape('a), c: 'a) => {
-    Js.log(c);
-    t;
-  };
-
-  let print_cell = (t: tape('a)): tape('a) =>
+  let get_value = (t: tape('a)) =>
     switch t {
-    | Tape(ls, m, rs) => print_value(Tape(ls, m, rs), m)
+    | Tape(_ls, m, _rs) => m
     };
 
   let write_value = (t: tape('a), c:'a) =>
