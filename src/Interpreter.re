@@ -34,7 +34,7 @@ module Interpreter = {
       interpret(ts);
     }
     | [Parser.PUT, ...ts]            => {
-      tape := Tape.print_cell(tape^);
+      tape^ |> Tape.get_value |> succ |> String.make(1) |> Js.log;
       interpret(ts);
     }
     | [Parser.GET, ...ts]            => {
